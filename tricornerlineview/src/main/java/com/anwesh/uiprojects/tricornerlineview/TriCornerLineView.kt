@@ -46,7 +46,6 @@ fun Canvas.drawTCLNode(i : Int, scale : Float, paint : Paint) {
     translate(-size / 2, 0f)
     rotate(90f * sc2)
     for (j in 0..(lines - 1)) {
-        val sc : Float
         save()
         translate(j * xGap, -size / 2 * (1 - 2 * (j % 2)))
         drawLine(0f, 0f, 0f, (-size / 2) * sc1.divideScale(j, lines) , paint)
@@ -71,5 +70,25 @@ class TriCornerLineView(ctx : Context) : View(ctx) {
             }
         }
         return true
+    }
+
+    data class State(var scale : Float = 0f, var dir : Float = 0f, var prevScale : Float = 0f) {
+
+        fun update(cb : (Float) -> Unit) {
+            scale += scale.updateValue(dir, lines, 1)
+            if (Math.abs(scale - prevScale) > 1) {
+                scale = prevScale + dir
+                dir = 0f
+                prevScale = scale
+                cb(prevScale)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            if (dir == 0f) {
+                dir = 1f - 2 * prevScale
+                cb()
+            }
+        }
     }
 }
