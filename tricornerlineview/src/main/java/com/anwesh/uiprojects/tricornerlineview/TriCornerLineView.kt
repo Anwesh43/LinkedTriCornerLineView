@@ -208,4 +208,13 @@ class TriCornerLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity: Activity) : TriCornerLineView {
+            val view : TriCornerLineView = TriCornerLineView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
