@@ -185,4 +185,26 @@ class TriCornerLineView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : TriCornerLineView) {
+
+        private val animator : Animator = Animator(view)
+        private val tcl : TriCornerLine = TriCornerLine(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            tcl.draw(canvas, paint)
+            animator.animate {
+                tcl.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            tcl.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
